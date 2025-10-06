@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
-
-import { readdirSync, readFileSync, writeFileSync } from "fs";
-import { join } from "path";
+// @ts-check
+import { readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 
 const dirs = ["packages", "apps", "examples", "integrations"];
 const outputPath = join(process.cwd(), "CHANGELOG.md");

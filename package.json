@@ -20,6 +20,7 @@
 	],
 	"scripts": {
 		"build": "tsdown",
+		"docs": "pnpm dlx typedoc --en tryPointStrategy Expand src",
 		"format": "prettier .",
 		"lint": "eslint . --max-warnings 0",
 		"lint:knip": "knip",

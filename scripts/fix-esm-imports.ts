@@ -1,8 +1,9 @@
 #!/usr/bin/env node
-import { readdir, readFile, writeFile, stat } from "fs/promises";
-import { join } from "path";
-import { fileURLToPath } from "url";
-import { existsSync } from "fs";
+// @ts-check
+import { readdir, readFile, writeFile, stat } from "node:fs/promises";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { existsSync } from "node:fs";
 
 const __filename = fileURLToPath(import.meta.url);
 
