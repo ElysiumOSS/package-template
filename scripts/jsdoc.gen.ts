@@ -252,32 +252,33 @@ class JSDocGenerator {
 					},
 				],
 				config: {
-					systemInstruction: `You are a technical documentation expert. Given the provided code, generate comprehensive JSDoc comments that include:
+					systemInstruction: `
+						You are a technical documentation expert. Given the provided code, generate comprehensive JSDoc comments that include:
           
-          1. Function/method descriptions with clear explanations
-          2. @param tags with types and descriptions
-          3. @returns tags with types and descriptions
-          4. @throws tags for potential errors
-          5. @example tags where helpful
-          6. Class and interface documentation
-          7. @deprecated tags where applicable
-          8. @web tags for web-related APIs or methods
-          9. @author tags
-          10. @see tags for related documentation or references
-          11. @since tags to indicate when a feature was added
-          12. @version tags for versioning information
-          13. @async tags for asynchronous functions
-          14. @readonly tags for read-only properties
-          15. @private, @protected, @public for access control
-          
-          Rules:
-          - Only return the code with JSDoc comments added
-          - Do not include any explanatory text, metadata, or markdown
-          - Preserve the original code structure exactly
-          - Use proper TypeScript types in JSDoc annotations
-          - Do not use jsdoc comments in unnecessary places, mainly for blocks of code which references subsequent and sometimes overarching codeblocks
-          - Be concise but comprehensive
-          - Refrain from wrapping the files with markdown codeblock syntax (i.e \`\`\`<language> <content>\`\`\`)`,
+          				1. Function/method descriptions with clear explanations
+          				2. @param tags with types and descriptions
+          				3. @returns tags with types and descriptions
+          				4. @throws tags for potential errors
+          				5. @example tags where helpful
+          				6. Class and interface documentation
+          				7. @deprecated tags where applicable
+          				8. @web tags for web-related APIs or methods
+          				9. @author tags
+          				10. @see tags for related documentation or references
+          				11. @since tags to indicate when a feature was added
+          				12. @version tags for versioning information
+          				13. @async tags for asynchronous functions
+          				14. @readonly tags for read-only properties
+          				15. @private, @protected, @public for access control
+
+          				Rules:
+          				- Only return the code with JSDoc comments added
+          				- Do not include any explanatory text, metadata, or markdown
+          				- Preserve the original code structure exactly
+          				- Use proper TypeScript types in JSDoc annotations
+          				- Do not use jsdoc comments in unnecessary places, mainly for blocks of code which references subsequent and sometimes overarching codeblocks
+          				- Be concise but comprehensive
+          				- Refrain from wrapping the files with markdown codeblock syntax (i.e \`\`\`<language> <content>\`\`\`)`,
 					maxOutputTokens: this.config.maxOutputTokens,
 					temperature: this.config.temperature,
 				},
@@ -470,7 +471,15 @@ class JSDocGenerator {
 		includeUntracked = true,
 		additionalExcludePatterns: string[] = [],
 	): Promise<string[]> {
-		const supportedExtensions = [".ts", ".js", ".tsx", ".jsx"];
+		const supportedExtensions = [
+			".ts",
+			".js",
+			".tsx",
+			".jsx",
+			"cjs",
+			"mjs",
+			"mts",
+		];
 		const FILE_OPTS = { encoding: "utf8" as const, cwd: directoryPath };
 
 		try {
@@ -482,7 +491,7 @@ class JSDocGenerator {
 					"git ls-files -o --exclude-standard",
 					FILE_OPTS,
 				) as string;
-				gitOutput += "\n" + untrackedOutput;
+				gitOutput += `\n${untrackedOutput}`;
 			}
 
 			// Parse the output into file paths
@@ -519,7 +528,7 @@ class JSDocGenerator {
 			);
 
 			return filteredFiles;
-		} catch (error) {
+		} catch (_error) {
 			// Fallback to directory scanning if not in a Git repo
 			console.warn(
 				"⚠️  Git not available or not in a Git repository, falling back to directory scanning",
@@ -646,7 +655,7 @@ class JSDocGenerator {
 					includeUntracked,
 					excludePatterns,
 				);
-			} catch (error) {
+			} catch (_error) {
 				console.warn(
 					"⚠️  Git scanning failed, falling back to directory scanning",
 				);
@@ -701,58 +710,58 @@ class JSDocGenerator {
  */
 async function showHelp(): Promise<void> {
 	console.log(`
-📚 JSDoc Generator - AI-powered JSDoc comment generation
-
-USAGE:
-  bun jsdoc-generator.ts [OPTIONS] [FILES...]
-
-OPTIONS:
-  --help                    Show this help message
-  --dir <path>             Process all files in directory (default: current directory)
-  --no-git                 Disable Git file discovery, use directory scanning instead
-  --no-untracked          Exclude untracked files when using Git discovery
-  --overwrite              Overwrite original files instead of creating .documented versions
-  --concurrency <n>        Maximum concurrent API requests (default: 3)
-  --retry-attempts <n>     Number of retry attempts for failed requests (default: 2)
-  --exclude <pattern>      Exclude files matching pattern (can be used multiple times)
-
-EXAMPLES:
-  # Process specific files
-  bun jsdoc-generator.ts file1.ts file2.js --overwrite
-
-  # Process all Git-tracked files in current directory (respects .gitignore)
-  bun jsdoc-generator.ts --dir .
-
-  # Process all files in src directory using Git (recommended)
-  bun jsdoc-generator.ts --dir ./src
-
-  # Process using directory scanning instead of Git
-  bun jsdoc-generator.ts --dir ./src --no-git
-
-  # Process Git-tracked files only (exclude untracked files)
-  bun jsdoc-generator.ts --dir ./src --no-untracked
-
-  # Process with custom settings and exclusions
-  bun jsdoc-generator.ts --dir ./src --concurrency 5 --exclude "*.test.ts" --exclude "*.spec.js"
-
-  # Overwrite original files
-  bun jsdoc-generator.ts --dir . --overwrite
-
-SUPPORTED FILE TYPES:
-  .ts, .js, .tsx, .jsx
-
-ENVIRONMENT VARIABLES:
-  GEMINI_API_KEY          Your Google Gemini API key (required)
-
-FILE DISCOVERY:
-  By default, uses 'git ls-files' to discover files, which:
-  - Respects your .gitignore rules
-  - Includes tracked files
-  - Optionally includes untracked files (not ignored by Git)
-  - Falls back to directory scanning if not in a Git repository
-
-FALLBACK EXCLUSIONS (when not using Git):
-  node_modules, .git, dist, build, coverage, *.test.*, *.spec.*
+		📚 JSDoc Generator - AI-powered JSDoc comment generation
+			
+		USAGE:
+		  bun jsdoc-generator.ts [OPTIONS] [FILES...]
+			
+		OPTIONS:
+		  --help                    Show this help message
+		  --dir <path>             Process all files in directory (default: current directory)
+		  --no-git                 Disable Git file discovery, use directory scanning instead
+		  --no-untracked          Exclude untracked files when using Git discovery
+		  --overwrite              Overwrite original files instead of creating .documented versions
+		  --concurrency <n>        Maximum concurrent API requests (default: 3)
+		  --retry-attempts <n>     Number of retry attempts for failed requests (default: 2)
+		  --exclude <pattern>      Exclude files matching pattern (can be used multiple times)
+			
+		EXAMPLES:
+		  # Process specific files
+		  bun jsdoc-generator.ts file1.ts file2.js --overwrite
+			
+		  # Process all Git-tracked files in current directory (respects .gitignore)
+		  bun jsdoc-generator.ts --dir .
+			
+		  # Process all files in src directory using Git (recommended)
+		  bun jsdoc-generator.ts --dir ./src
+			
+		  # Process using directory scanning instead of Git
+		  bun jsdoc-generator.ts --dir ./src --no-git
+			
+		  # Process Git-tracked files only (exclude untracked files)
+		  bun jsdoc-generator.ts --dir ./src --no-untracked
+			
+		  # Process with custom settings and exclusions
+		  bun jsdoc-generator.ts --dir ./src --concurrency 5 --exclude "*.test.ts" --exclude "*.spec.js"
+			
+		  # Overwrite original files
+		  bun jsdoc-generator.ts --dir . --overwrite
+			
+		SUPPORTED FILE TYPES:
+		  .ts, .js, .tsx, .jsx
+			
+		ENVIRONMENT VARIABLES:
+		  GEMINI_API_KEY          Your Google Gemini API key (required)
+			
+		FILE DISCOVERY:
+		  By default, uses 'git ls-files' to discover files, which:
+		  - Respects your .gitignore rules
+		  - Includes tracked files
+		  - Optionally includes untracked files (not ignored by Git)
+		  - Falls back to directory scanning if not in a Git repository
+			
+		FALLBACK EXCLUSIONS (when not using Git):
+		  node_modules, .git, dist, build, coverage, *.test.*, *.spec.*
 `);
 }
 
@@ -805,7 +814,7 @@ async function main() {
 
 	if (concurrencyIndex !== -1 && concurrencyIndex < args.length - 1) {
 		maxConcurrency = Number.parseInt(args[concurrencyIndex + 1], 10);
-		if (isNaN(maxConcurrency) || maxConcurrency < 1) {
+		if (Number.isNaN(maxConcurrency) || maxConcurrency < 1) {
 			console.error(
 				"❌ Invalid concurrency value. Must be a positive integer.",
 			);
@@ -815,7 +824,7 @@ async function main() {
 
 	if (retryIndex !== -1 && retryIndex < args.length - 1) {
 		retryAttempts = Number.parseInt(args[retryIndex + 1], 10);
-		if (isNaN(retryAttempts) || retryAttempts < 0) {
+		if (Number.isNaN(retryAttempts) || retryAttempts < 0) {
 			console.error(
 				"❌ Invalid retry attempts value. Must be a non-negative integer.",
 			);

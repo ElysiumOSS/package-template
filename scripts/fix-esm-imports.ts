@@ -1,14 +1,11 @@
 #!/usr/bin/env node
 // @ts-check
-import { readdir, readFile, writeFile, stat } from "node:fs/promises";
-import { join } from "node:path";
-import { fileURLToPath } from "node:url";
 import { existsSync } from "node:fs";
-
-const __filename = fileURLToPath(import.meta.url);
+import { readdir, readFile, writeFile } from "node:fs/promises";
+import { join } from "node:path";
 
 // Get the dist directory relative to where this script is called from
-const distDir = process.cwd() + "/dist";
+const distDir = `${process.cwd()}/dist`;
 
 async function fixImports(dir: string): Promise<void> {
 	const files = await readdir(dir, { withFileTypes: true });
@@ -41,7 +38,7 @@ async function fixImports(dir: string): Promise<void> {
 							) {
 								return `from '${importPath}/index.js';`;
 							}
-						} catch (e) {
+						} catch (_e) {
 							// If we can't check, just add .js as before
 						}
 						return `from '${importPath}.js';`;
@@ -69,7 +66,7 @@ async function fixImports(dir: string): Promise<void> {
 							) {
 								return `export * from '${importPath}/index.js';`;
 							}
-						} catch (e) {
+						} catch (_e) {
 							// If we can't check, just add .js as before
 						}
 						return `export * from '${importPath}.js';`;
@@ -98,7 +95,7 @@ async function fixImports(dir: string): Promise<void> {
 							) {
 								return `import('${importPath}/index.js')`;
 							}
-						} catch (e) {
+						} catch (_e) {
 							// If we can't check, just add .js as before
 						}
 						return `import('${importPath}.js')`;

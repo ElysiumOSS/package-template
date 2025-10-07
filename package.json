@@ -35,6 +35,8 @@
 		"*": "prettier --ignore-unknown --write"
 	},
 	"dependencies": {
+		"@google/genai": "^1.22.0",
+		"@types/bun": "^1.2.23",
 		"type-fest": "^5.0.1"
 	},
 	"devDependencies": {

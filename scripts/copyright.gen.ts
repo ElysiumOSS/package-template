@@ -24,8 +24,10 @@ interface FormatType {
 	footer?: string;
 }
 
-const FILE_OPTS: { encoding: "utf-8" } = { encoding: "utf-8" } as const;
-const FORMAT_TYPES: FormatType[] = [
+const FILE_OPTS = { encoding: "utf-8" } as const satisfies {
+	encoding: "utf-8";
+};
+const FORMAT_TYPES = [
 	{
 		regex: /\.((ts)|(scss)|(js)|(tsx)|(css))$/,
 		header: "/**",
@@ -34,9 +36,9 @@ const FORMAT_TYPES: FormatType[] = [
 	},
 	{ regex: /\.html$/, header: "<!--", body: "", footer: "-->" },
 	{ regex: /\.sh$/, header: "#", body: "", footer: "" },
-] as const;
-const COPYRIGHT =
-	` Copyright ${new Date().getFullYear()} GDG on Campus Farmingdale State College
+] as const satisfies FormatType[];
+const COPYRIGHT = ` 
+ Copyright ${new Date().getFullYear()} GDG on Campus Farmingdale State College
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -48,17 +50,21 @@ const COPYRIGHT =
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
- limitations under the License.` as const;
+ limitations under the License.
+` as const;
 
-const fileExists = async (path: string): Promise<boolean> => {
-	try {
-		await readFile(path);
-		return true;
-	} catch {
-		return false;
-	}
-};
+const fileExists = async (path: string): Promise<boolean> =>
+	readFile(path)
+		.then(() => true)
+		.catch(() => false);
 
+/**
+ * : Promise<
+	{
+		contents: string,
+		path: string,	
+	} | FormatType>
+*/
 const getSourceFilesToUpdate = async () => {
 	const paths = (
 		execSync("git ls-files", FILE_OPTS) +
@@ -108,13 +114,13 @@ console.log("Checking copyright in sources...");
 			console.error(
 				`Copyright header missing in ${missing.map(({ path }) => path).join(", ")}`,
 			);
-			console.error("Run `npm run format` at root to update");
+			console.error("Run `pnpm run format` at root to update");
 			process.exit(1);
 		}
 		console.log("Copyright headers okay");
 		process.exit(0);
 	}
-
+	writeFile;
 	const updated = missing.map((m) => {
 		m.contents = updateContent(m.contents, m.format!);
 		return m;

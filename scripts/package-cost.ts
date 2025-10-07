@@ -1,8 +1,13 @@
+#!/usr/bin/env tsx
 // @ts-check
+
 import { execSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { PackageJson } from "type-fest";
+
+const isNotNull = <Value>(value: Value): value is Exclude<Value, null> =>
+	value !== null;
 
 const packageJsonPath = join(process.cwd(), "package.json");
 const packageJson = JSON.parse(
@@ -32,8 +37,10 @@ const getPackageSize = (
 			size: size,
 		};
 	} catch (error) {
-		if (Error.isError(error)) {
+		if (error instanceof Error) {
 			console.error(`Failed to get size for ${packageName}:`, error.message);
+		} else {
+			console.error(`Failed to get size for ${packageName}:`, error);
 		}
 		return null;
 	}

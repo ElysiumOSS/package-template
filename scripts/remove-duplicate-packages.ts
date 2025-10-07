@@ -1,3 +1,5 @@
+#!/usr/bin/env bun
+// @ts-check
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { PackageJson } from "type-fest";
@@ -39,14 +41,14 @@ const picked = {
 			},
 			{} as Record<string, string>,
 		),
-};
+} as const;
 
 (async () => {
 	try {
 		packageJson.dependencies = picked;
 		writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 	} catch (error) {
-		if (Error.isError(error)) {
+		if (error instanceof Error) {
 			console.error(error.message);
 		} else {
 			console.error(error);

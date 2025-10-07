@@ -1,12 +1,10 @@
 #!/usr/bin/env tsx
 // @ts-check
-import { execSync } from "child_process";
+import { execSync } from "node:child_process";
 
 const commands = [
 	"rm -rf node_modules",
-	"rm -rf packages/**/dist",
-	"rm -rf packages/*/node_modules",
-	"rm -rf apps/*/node_modules",
+	"rm -rf dist",
 	"rm -rf .pnpm-store",
 	'find . -type d -name "node_modules" -exec rm -rf {} +',
 	'find . -type d -name "dist" -exec rm -rf {} +',

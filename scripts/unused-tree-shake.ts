@@ -1,3 +1,5 @@
+#!/usr/bin/env bun
+// @ts-check
 export default (async () =>
 	console.log(
 		(await import("node:child_process"))

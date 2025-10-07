@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
+import { execSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
-import { execSync } from "node:child_process";
 
 try {
 	// Get global pnpm directory
@@ -30,7 +30,7 @@ try {
 	toRemove.forEach((k) => delete deps[k]);
 
 	// Write updated package.json
-	fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, "\t") + "\n");
+	fs.writeFileSync(pkgPath, `${JSON.stringify(pkg, null, "\t")}\n`);
 	console.log("Updated package.json");
 
 	// Run pnpm install in global directory
