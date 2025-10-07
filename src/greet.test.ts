@@ -10,7 +10,7 @@ describe(greet, () => {
 
 		greet(message);
 
-		expect(logger).toHaveBeenCalledWith(message);
+		expect(logger).toHaveBeenCalledExactlyOnceWith(message);
 		expect(logger).toHaveBeenCalledTimes(1);
 	});
 
@@ -19,7 +19,7 @@ describe(greet, () => {
 
 		greet({ message });
 
-		expect(logger).toHaveBeenCalledWith(message);
+		expect(logger).toHaveBeenCalledExactlyOnceWith(message);
 		expect(logger).toHaveBeenCalledTimes(1);
 	});
 
@@ -28,7 +28,7 @@ describe(greet, () => {
 
 		greet({ logger, message });
 
-		expect(logger).toHaveBeenCalledWith(message);
+		expect(logger).toHaveBeenCalledExactlyOnceWith(message);
 		expect(logger).toHaveBeenCalledTimes(1);
 	});
 
@@ -38,7 +38,7 @@ describe(greet, () => {
 
 		greet({ logger, message, times });
 
-		expect(logger).toHaveBeenCalledWith(message);
+		expect(logger).toHaveBeenCalledExactlyOnceWith(message);
 		expect(logger).toHaveBeenCalledTimes(7);
 	});
 });
