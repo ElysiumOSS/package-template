@@ -854,7 +854,7 @@ async function main() {
 		"--dir",
 		"--exclude",
 	]);
-	const files = [];
+	const files = [] as string[];
 
 	for (let i = 0; i < args.length; i++) {
 		const arg = args[i];
@@ -906,7 +906,7 @@ async function main() {
 		} else {
 			// Process specific files
 			const supportedExtensions = [".ts", ".js", ".tsx", ".jsx"];
-			const validFiles = [];
+			const validFiles = [] as string[];
 
 			for (const file of files) {
 				const fileExists = await Bun.file(file).exists();

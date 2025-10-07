@@ -13,7 +13,7 @@ jobs:
       - uses: ./.github/actions/prepare
       - run: pnpm build
       - env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         uses: JoshuaKGoldberg/release-it-action@v0.3.2
 
@@ -22,7 +22,7 @@ name: Release
 on:
   push:
     branches:
-      - main
+      - master
 
 permissions:
   contents: write
